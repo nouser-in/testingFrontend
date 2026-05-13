@@ -1,0 +1,115 @@
+<div class="login-wrapper vh-100">
+      <div class="row g-0">
+        <!-- Left Side -->
+        <div class="col-lg-5 d-flex flex-column justify-content-center align-items-center text-white position-relative left-panel">
+          <div class="court-animations">
+            <div class="bg-blob"></div>
+            <div class="bg-blob-2"></div>
+            <i class="bi bi-balance-scale pos-1"></i>
+            <div class="pos-2">⚖️</div>
+            <i class="bi bi-gavel pos-3"></i>
+            <div class="pos-4">👨‍⚖️</div>
+            <i class="bi bi-building pos-5"></i>
+            <div class="pos-12">👩‍💼</div>
+            <i class="bi bi-journal-text pos-9"></i>
+          </div>
+          
+          <div class="text-center header-fade">
+            <img src="assets/logo1.png" alt="JusticeServe Logo" class="login-logo mb-3">
+            <h1 class="display-5 fw-bold mt-3">JusticeServe</h1>
+            <p class="lead text-white-50">Join our modern legal network</p>
+          </div>
+        </div>
+
+        <!-- Right Side -->
+        <div class="col-lg-7 d-flex flex-column justify-content-center align-items-center right-panel">
+          <div class="auth-container p-4">
+            <div class="card auth-card shadow-lg">
+              <div class="card-body p-4">
+                <h4 class="fw-bold mb-1 text-center">Create Account</h4>
+                <p class="text-muted small mb-4 text-center">
+                  Default role: <strong>Citizen</strong>.
+                </p>
+
+                <div *ngIf="error" class="alert alert-danger py-2 small">{{ error }}</div>
+                <div *ngIf="success" class="alert alert-success py-2 small">{{ success }}</div>
+
+                <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" [(ngModel)]="form.name"
+                             name="name" required minlength="4" maxlength="20" pattern="^[a-zA-Z\s]+$"
+                             placeholder="Enter your full name" #name="ngModel" (input)="onInputChange()">
+                      <div *ngIf="name.invalid && (name.dirty || name.touched || registerForm.submitted)" class="text-danger small mt-1">
+                        <div *ngIf="name.errors?.['required']">Full name is required</div>
+                        <div *ngIf="name.errors?.['minlength']">Full name must be at least 4 characters</div>
+                        <div *ngIf="name.errors?.['maxlength']">Full name cannot exceed 20 characters</div>
+                        <div *ngIf="name.errors?.['pattern']">Only letters and spaces are allowed</div>
+                      </div>
+                      <div *ngIf="fieldErrors.name" class="text-danger small mt-1">{{ fieldErrors.name }}</div>
+                    </div>
+
+                    <div class="col-12">
+                      <label class="form-label">Email Address <span class="text-danger">*</span></label>
+                      <input type="email" class="form-control" [(ngModel)]="form.email"
+                             name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3}$"
+                             placeholder="email@example.com" #email="ngModel" (input)="onInputChange()">
+                      <div *ngIf="email.invalid && (email.dirty || email.touched || registerForm.submitted)" class="text-danger small mt-1">
+                        <div *ngIf="email.errors?.['required']">Email is required</div>
+                        <div *ngIf="email.errors?.['pattern']">Please enter a valid email address</div>
+                      </div>
+                      <div *ngIf="fieldErrors.email" class="text-danger small mt-1">{{ fieldErrors.email }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label">Password <span class="text-danger">*</span></label>
+                      <input type="password" class="form-control" [(ngModel)]="form.password"
+                             name="password" required minlength="6" maxlength="16"
+                             placeholder="Min 6 chars" #password="ngModel" (input)="onInputChange()">
+                      <div *ngIf="password.invalid && (password.dirty || password.touched || registerForm.submitted)" class="text-danger small mt-1">
+                        <div *ngIf="password.errors?.['required']">Password is required</div>
+                        <div *ngIf="password.errors?.['minlength']">Password must be at least 6 characters</div>
+                        <div *ngIf="password.errors?.['maxlength']">Password cannot exceed 16 characters</div>
+                      </div>
+                      <div *ngIf="fieldErrors.password" class="text-danger small mt-1">{{ fieldErrors.password }}</div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label class="form-label">Phone <span class="text-danger">*</span></label>
+                      <input type="tel" class="form-control" [(ngModel)]="form.phone"
+                             name="phone" required pattern="^[0-9]{10}$" minlength="10" maxlength="10"
+                             inputmode="numeric" placeholder="9999999999" #phone="ngModel" (input)="onPhoneInput()" (keypress)="allowDigitsOnly($event)">
+                      <div *ngIf="phone.invalid && (phone.dirty || phone.touched || registerForm.submitted)" class="text-danger small mt-1">
+                        <div *ngIf="phone.errors?.['required']">Phone number is required</div>
+                        <div *ngIf="phone.errors?.['pattern'] || phone.errors?.['minlength'] || phone.errors?.['maxlength']">Phone number must be 10 digits</div>
+                      </div>
+                      <div *ngIf="fieldErrors.phone" class="text-danger small mt-1">{{ fieldErrors.phone }}</div>
+                    </div>
+
+                    <div class="col-12">
+                      <div class="alert alert-info d-flex align-items-center gap-2 py-2 mb-0 border-0 shadow-sm" style="background: rgba(13, 202, 240, 0.1);">
+                        <i class="bi bi-info-circle-fill text-info"></i>
+                        <small>Lawyers or Judges must contact Admin for upgrades after signup.</small>
+                      </div>
+                    </div>
+
+                    <div class="col-12">
+                      <button type="submit" class="btn btn-primary w-100 shadow-sm" [disabled]="loading || registerForm.invalid">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                        {{ loading ? 'Creating Account...' : 'Create Account' }}
+                      </button>
+                    </div>
+                    <div class="col-12 text-center mt-3">
+                      <p class="mb-0 text-muted" style="font-size:0.88rem">
+                        Already have an account? <a routerLink="/auth/login" class="text-primary fw-bold">Sign In</a>
+                      </p>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

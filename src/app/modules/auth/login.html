@@ -1,0 +1,75 @@
+﻿    <div class="login-wrapper vh-100">
+      <div class="row h-100 g-0">
+        <!-- Left Side: Logo and Branding -->
+        <div class="col-lg-5 d-flex flex-column justify-content-center align-items-center text-white position-relative left-panel">
+          <div class="court-animations">
+            <div class="bg-blob"></div>
+            <div class="bg-blob-2"></div>
+            <i class="bi bi-balance-scale pos-1"></i>
+            <div class="pos-2">⚖️</div>
+            <i class="bi bi-gavel pos-3"></i>
+            <div class="pos-4">👨‍⚖️</div>
+            <i class="bi bi-building pos-5"></i>
+            <i class="bi bi-shield-lock pos-6"></i>
+            <div class="pos-7">👮‍♂️</div>
+            <i class="bi bi-handcuffs pos-8"></i>
+            <i class="bi bi-journal-text pos-9"></i>
+            <div class="pos-10">📜</div>
+            <i class="bi bi-people pos-11"></i>
+            <div class="pos-12">👩‍💼</div>
+            <i class="bi bi-clipboard-check pos-13"></i>
+            <div class="pos-14">🔍</div>
+            <div class="pos-15">📝</div>
+          </div>
+          
+          <div class="text-center header-fade">
+            <img src="assets/logo1.png" alt="JusticeServe Logo" class="login-logo mb-3">
+            <h1 class="display-5 fw-bold mt-3 shine-text">JusticeServe</h1>
+            <p class="lead text-white-50 typing-text">Legal Court Management System</p>
+          </div>
+        </div>
+        
+        <!-- Right Side: Auth Form -->
+        <div class="col-lg-7 d-flex flex-column justify-content-center align-items-center right-panel">
+          <div class="auth-container p-4">
+            <div class="card auth-card shadow-lg">
+              <div class="card-body p-4">
+                <h4 class="fw-bold mb-4 text-center">Welcome Back</h4>
+                <div *ngIf="error" class="alert alert-danger py-2">{{ error }}</div>
+
+                <form (ngSubmit)="onLoginSubmit(loginForm)" #loginForm="ngForm">
+                  <div class="mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-control" [(ngModel)]="loginFormData.email" name="email" required
+                           pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3}$"
+                           placeholder="email@example.com" #email="ngModel" (input)="onInputChange()">
+                    <div *ngIf="email.invalid && (email.dirty || email.touched || loginForm.submitted)" class="text-danger small mt-1">
+                      <div *ngIf="email.errors?.['required']">Email is required</div>
+                      <div *ngIf="email.errors?.['pattern']">Please enter a valid email address.</div>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" [(ngModel)]="loginFormData.password" name="password" required minlength="6" maxlength="16"
+                           placeholder="••••••••" #password="ngModel" (input)="onInputChange()">
+                    <div *ngIf="password.invalid && (password.dirty || password.touched || loginForm.submitted)" class="text-danger small mt-1">
+                      <div *ngIf="password.errors?.['required']">Password is required</div>
+                      <div *ngIf="password.errors?.['minlength']">Password must be at least 6 characters</div>
+                      <div *ngIf="password.errors?.['maxlength']">Password cannot exceed 16 characters</div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-100" [disabled]="loading || loginForm.invalid">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ loading ? 'Signing in...' : 'Sign In' }}
+                  </button>
+                </form>
+
+                <p class="text-center mt-3 mb-0 text-muted" style="font-size:0.88rem">
+                  Don't have an account? <a routerLink="/auth/register" class="text-primary fw-bold">Register</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,155 @@
+    .court-order-modal {
+      max-width: 700px;
+    }
+
+    .court-order-content {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .court-order-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 1.5rem;
+    }
+
+    .court-order-header .modal-title {
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .court-order-body {
+      padding: 2rem;
+      background: #f8f9fa;
+    }
+
+    .info-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+      transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    .info-label {
+      font-size: 0.85rem;
+      color: #6c757d;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .info-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #212529;
+      margin-top: 0.5rem;
+    }
+
+    .description-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+    }
+
+    .description-title {
+      color: #212529;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .description-content {
+      color: #495057;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .court-order-footer {
+      background: white;
+      border-top: 1px solid #e9ecef;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      border-radius: 20px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* Judgment Modal Styles */
+    .judgment-modal {
+      max-width: 700px;
+    }
+
+    .judgment-content {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .judgment-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 1.5rem;
+    }
+
+    .judgment-header .modal-title {
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .judgment-body {
+      padding: 2rem;
+      background: #f8f9fa;
+    }
+
+    .summary-section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+    }
+
+    .summary-title {
+      color: #212529;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .summary-content {
+      color: #495057;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .judgment-footer {
+      background: white;
+      border-top: 1px solid #e9ecef;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }

@@ -1,0 +1,194 @@
+<div class="page-header d-flex align-items-center justify-content-between">
+  <div>
+    <h4><i class="bi bi-grid me-2"></i>Dashboard</h4>
+    <p class="text-muted mb-0" style="font-size:0.85rem">
+      Welcome back, <strong>{{ userName }}</strong> &nbsp;
+      <span class="badge bg-primary">{{ userRole }}</span>
+    </p>
+  </div>
+</div>
+
+<div class="p-4">
+
+  <!-- ══ CITIZEN DASHBOARD ══ -->
+  <ng-container *ngIf="isCitizen">
+    <div class="row g-3 mb-4">
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'My Cases', val:stats.myCases, icon:'bi-folder2-open', link:'/cases', grad:'#667eea,#764ba2'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'Active Cases', val:stats.myActiveCases, icon:'bi-activity', link:'/cases', params:{status:'ACTIVE'}, grad:'#f093fb,#f5576c'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'Closed Cases', val:stats.myClosedCases, icon:'bi-check-circle', link:'/cases', params:{status:'CLOSED'}, grad:'#43e97b,#38f9d7'}"></ng-container>
+    </div>
+    <div class="row g-3">
+      <div class="col-lg-8"><ng-container *ngTemplateOutlet="caseTable; context:{title:'My Cases', cases:recentCases}"></ng-container></div>
+      <div class="col-lg-4"><ng-container *ngTemplateOutlet="quickActions; context:{type:'citizen'}"></ng-container></div>
+    </div>
+  </ng-container>
+
+  <!-- ══ JUDGE DASHBOARD ══ -->
+  <ng-container *ngIf="isJudge">
+    <div class="row g-3 mb-4">
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-3', label:'My Hearings', val:stats.myHearings, icon:'bi-calendar-event', link:'/hearings', grad:'#667eea,#764ba2'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-3', label:'Pending Judgments', val:stats.pendingJudgments, icon:'bi-hammer', link:'/judgments', grad:'#f093fb,#f5576c'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-3', label:'Total Cases', val:stats.totalCases, icon:'bi-folder2-open', link:'/cases', grad:'#4facfe,#00f2fe'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-3', label:'Finalized', val:stats.finalizedJudgments, icon:'bi-check-circle', link:'/judgments', grad:'#43e97b,#38f9d7'}"></ng-container>
+    </div>
+    <div class="row g-3">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header"><i class="bi bi-calendar-event me-2"></i>My Upcoming Hearings</div>
+          <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+              <thead><tr><th>Case</th><th>Date</th><th>Time</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let h of recentHearings">
+                  <td><a [routerLink]="['/cases', h.caseId]" class="text-decoration-none">{{ h.caseTitle }}</a></td>
+                  <td>{{ h.date | date:'mediumDate' }}</td>
+                  <td>{{ h.time }}</td>
+                  <td><span class="badge" [ngClass]="badge(h.status)">{{ h.status }}</span></td>
+                </tr>
+                <tr *ngIf="recentHearings.length===0"><td colspan="4" class="text-center text-muted py-3">No hearings assigned</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4"><ng-container *ngTemplateOutlet="quickActions; context:{type:'judge'}"></ng-container></div>
+    </div>
+  </ng-container>
+
+  <!-- ══ CLERK DASHBOARD ══ -->
+  <ng-container *ngIf="isClerk">
+    <div class="row g-3 mb-4">
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-3', label:'Total Cases', val:stats.totalCases, icon:'bi-folder2-open', link:'/cases', grad:'#667eea,#764ba2'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-3', label:'Scheduled Hearings', val:stats.scheduledHearings, icon:'bi-calendar-event', link:'/hearings', grad:'#f093fb,#f5576c'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-3', label:'Citizens', val:stats.totalCitizens, icon:'bi-people', link:'/judgments/orders', grad:'#4facfe,#00f2fe'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-3', label:'Under Review', val:stats.underReview, icon:'bi-hourglass-split', link:'/cases', params:{status:'UNDER_REVIEW'}, grad:'#43e97b,#38f9d7'}"></ng-container>
+    </div>
+    <div class="row g-3">
+      <div class="col-lg-8"><ng-container *ngTemplateOutlet="caseTable; context:{title:'Recent Cases', cases:recentCases, showCitizen:true}"></ng-container></div>
+      <div class="col-lg-4"><ng-container *ngTemplateOutlet="quickActions; context:{type:'clerk'}"></ng-container></div>
+    </div>
+  </ng-container>
+
+  <!-- ══ LAWYER DASHBOARD ══ -->
+  <ng-container *ngIf="isLawyer">
+    <div class="row g-3 mb-4">
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'Assigned Cases', val:stats.assignedCases, icon:'bi-folder2-open', link:'/cases', grad:'#667eea,#764ba2'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'Active Cases', val:stats.myActiveCases, icon:'bi-activity', link:'/cases', params:{status:'ACTIVE'}, grad:'#4facfe,#00f2fe'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'Upcoming Hearings', val:stats.totalHearings, icon:'bi-calendar-event', link:'/hearings', grad:'#43e97b,#38f9d7'}"></ng-container>
+    </div>
+    <div class="row g-3">
+      <div class="col-lg-8"><ng-container *ngTemplateOutlet="caseTable; context:{title:'My Assigned Cases', cases:recentCases, showCitizen:true}"></ng-container></div>
+      <div class="col-lg-4"><ng-container *ngTemplateOutlet="quickActions; context:{type:'lawyer'}"></ng-container></div>
+    </div>
+  </ng-container>
+
+  <!-- ══ COMPLIANCE DASHBOARD ══ -->
+  <ng-container *ngIf="isCompliance || isAuditor">
+    <div class="row g-3 mb-4">
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'Total Cases', val:stats.totalCases, icon:'bi-folder2-open', grad:'#667eea,#764ba2'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'Total Hearings', val:stats.totalHearings, icon:'bi-calendar-event', link:'/hearings', grad:'#43e97b,#38f9d7'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-md-4', label:'Judgments', val:stats.finalizedJudgments, icon:'bi-hammer', link:'/judgments', grad:'#f093fb,#f5576c'}"></ng-container>
+    </div>
+    <div class="row g-3">
+      <div class="col-lg-8"><ng-container *ngTemplateOutlet="caseTable; context:{title:'All Cases for Review', cases:recentCases, showDate:true}"></ng-container></div>
+      <div class="col-lg-4"><ng-container *ngTemplateOutlet="quickActions; context:{type:'compliance'}"></ng-container></div>
+    </div>
+  </ng-container>
+
+  <!-- ══ ADMIN DASHBOARD ══ -->
+  <ng-container *ngIf="isAdmin">
+    <div class="row g-3 mb-4">
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-xl-3', label:'Total Cases', val:stats.totalCases, icon:'bi-folder2-open', link:'/cases', grad:'#667eea,#764ba2'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-xl-3', label:'Active Cases', val:stats.activeCases, icon:'bi-activity', link:'/cases', params:{status:'ACTIVE'}, grad:'#f093fb,#f5576c'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-xl-3', label:'Total Hearings', val:stats.totalHearings, icon:'bi-calendar-event', link:'/hearings', grad:'#4facfe,#00f2fe'}"></ng-container>
+      <ng-container *ngTemplateOutlet="statCard; context:{col:'col-sm-6 col-xl-3', label:'Citizens', val:stats.totalCitizens, icon:'bi-people', link:'/citizens', grad:'#43e97b,#38f9d7'}"></ng-container>
+    </div>
+    <div class="row g-3">
+      <div class="col-lg-8"><ng-container *ngTemplateOutlet="caseTable; context:{title:'Recent Cases', cases:recentCases, showCitizen:true, showDate:true, isAdmin:true}"></ng-container></div>
+      <div class="col-lg-4"><ng-container *ngTemplateOutlet="quickActions; context:{type:'admin'}"></ng-container></div>
+    </div>
+  </ng-container>
+</div>
+
+<!-- ══ TEMPLATES ══ -->
+
+<ng-template #statCard let-col="col" let-label="label" let-val="val" let-icon="icon" let-link="link" let-params="params" let-grad="grad">
+  <div [class]="col">
+    <div class="stat-card" [style.background]="'linear-gradient(135deg,' + grad + ')'">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <div style="font-size:0.8rem;opacity:0.8">{{ label }}</div>
+          <div style="font-size:2rem;font-weight:700">{{ val }}</div>
+        </div>
+        <i class="bi {{ icon }}" style="font-size:2.5rem;opacity:0.5"></i>
+      </div>
+      <a *ngIf="link" [routerLink]="link" [queryParams]="params" class="text-white-50 text-decoration-none" style="font-size:0.8rem">View all →</a>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #caseTable let-title="title" let-cases="cases" let-showCitizen="showCitizen" let-showDate="showDate" let-isAdmin="isAdmin">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between">
+      <span><i class="bi bi-folder2-open me-2"></i>{{ title }}</span>
+      <a *ngIf="isAdmin" routerLink="/cases" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr><th>ID</th><th>Title</th><th *ngIf="showCitizen">Citizen</th><th *ngIf="showDate || !showCitizen">Filed</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of cases">
+            <td>#{{ c.caseId }}</td>
+            <td><a [routerLink]="['/cases', c.caseId]">{{ c.title }}</a></td>
+            <td *ngIf="showCitizen">{{ c.citizenName }}</td>
+            <td *ngIf="showDate || !showCitizen">{{ c.filedDate | date:'mediumDate' }}</td>
+            <td><span class="badge" [ngClass]="badge(c.status)">{{ c.status }}</span></td>
+          </tr>
+          <tr *ngIf="cases.length===0"><td colspan="5" class="text-center text-muted py-3">No cases available</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #quickActions let-type="type">
+  <div class="card">
+    <div class="card-header"><i class="bi bi-lightning me-2"></i>Quick Actions</div>
+    <div class="card-body d-flex flex-column gap-2">
+      <ng-container [ngSwitch]="type">
+        <ng-container *ngSwitchCase="'citizen'">
+          <a routerLink="/citizens/my-profile" class="btn btn-outline-info d-flex align-items-center gap-2"><i class="bi bi-person-circle"></i> My Profile</a>
+          <a routerLink="/cases/new" class="btn btn-outline-primary d-flex align-items-center gap-2"><i class="bi bi-folder-plus"></i> File New Case</a>
+          <a routerLink="/notifications" class="btn btn-outline-secondary d-flex align-items-center gap-2"><i class="bi bi-bell"></i> Notifications</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'judge'">
+          <a routerLink="/judgments/new" class="btn btn-outline-warning d-flex align-items-center gap-2"><i class="bi bi-hammer"></i> Record Judgment</a>
+          <a routerLink="/judgments/orders/new" class="btn btn-outline-danger d-flex align-items-center gap-2"><i class="bi bi-file-text"></i> Issue Court Order</a>
+          <a routerLink="/hearings" class="btn btn-outline-primary d-flex align-items-center gap-2"><i class="bi bi-calendar-event"></i> View Hearings</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'clerk'">
+          <a routerLink="/hearings/new" class="btn btn-outline-info d-flex align-items-center gap-2"><i class="bi bi-calendar-plus"></i> Schedule Hearing</a>
+          <a routerLink="/citizens/new" class="btn btn-outline-success d-flex align-items-center gap-2"><i class="bi bi-person-plus"></i> Register Citizen</a>
+          <a routerLink="/cases" class="btn btn-outline-primary d-flex align-items-center gap-2"><i class="bi bi-folder2-open"></i> Manage Cases</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'lawyer'">
+          <a routerLink="/cases" class="btn btn-outline-primary d-flex align-items-center gap-2"><i class="bi bi-folder2-open"></i> My Cases</a>
+          <a routerLink="/hearings" class="btn btn-outline-info d-flex align-items-center gap-2"><i class="bi bi-calendar-event"></i> View Hearings</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'compliance'">
+          <a routerLink="/compliance" class="btn btn-outline-success d-flex align-items-center gap-2"><i class="bi bi-shield-check"></i> Compliance Records</a>
+          <a routerLink="/reports" class="btn btn-outline-primary d-flex align-items-center gap-2"><i class="bi bi-bar-chart"></i> Generate Report</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'admin'">
+          <a routerLink="/cases/new" class="btn btn-outline-primary d-flex align-items-center gap-2"><i class="bi bi-folder-plus"></i> File New Case</a>
+          <a routerLink="/citizens/new" class="btn btn-outline-success d-flex align-items-center gap-2"><i class="bi bi-person-plus"></i> Register Citizen</a>
+          <a routerLink="/hearings/new" class="btn btn-outline-info d-flex align-items-center gap-2"><i class="bi bi-calendar-plus"></i> Schedule Hearing</a>
+          <a routerLink="/judgments/new" class="btn btn-outline-warning d-flex align-items-center gap-2"><i class="bi bi-hammer"></i> Record Judgment</a>
+          <a routerLink="/users" class="btn btn-outline-danger d-flex align-items-center gap-2"><i class="bi bi-person-gear"></i> Manage Users</a>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

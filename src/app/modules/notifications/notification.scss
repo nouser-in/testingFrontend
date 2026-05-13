@@ -1,0 +1,78 @@
+    .btn-xs { font-size: 0.75rem; padding: 1px 6px; }
+    .opacity-75 { opacity: 0.75; }
+
+    .modal-content {
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      border: none;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      background: #007bff;
+      color: black;
+      border-bottom: none;
+      padding: 1.25rem 1.5rem;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .modal-header .modal-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      background: white;
+    }
+
+    .modal-footer {
+      border-top: 1px solid #dee2e6;
+      padding: 1rem 1.5rem;
+      background: #f8f9fa;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .notification-detail-label {
+      font-weight: 600;
+      color: #2484e3;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .notification-detail-value {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid #e9ecef;
+    }
+
+    .message-content {
+      white-space: pre-line;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      color: #212529;
+    }
+
+    .message-content strong {
+      color: #343a40;
+      font-weight: 600;
+    }
+
+    .case-info {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #dee2e6;
+    }
+
+    .timestamp-info {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      border: 1px solid #dee2e6;
+    }

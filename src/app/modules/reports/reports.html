@@ -1,0 +1,277 @@
+ <!-- Reports List View -->
+    <div *ngIf="!selectedReport">
+      <div class="page-header">
+        <h4><i class="bi bi-bar-chart me-2"></i>Analytics & Reports</h4>
+      </div>
+      <div class="p-4">
+        <!-- Generate Report -->
+        <div class="card mb-4">
+          <div class="card-header">Generate New Report</div>
+          <div class="card-body">
+            <div class="row g-3 align-items-end">
+              <div class="col-md-4">
+                <label class="form-label">Report Scope</label>
+                <select class="form-select" [(ngModel)]="scope">
+                  <option value="">Select scope...</option>
+                  <option value="CASE">Cases</option>
+                  <option value="HEARING">Hearings</option>
+                  <option value="JUDGMENT">Judgments</option>
+                  <option value="COMPLIANCE">Compliance</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-primary w-100" (click)="generate()" [disabled]="!scope || generating">
+                  <span *ngIf="generating" class="spinner-border spinner-border-sm me-1"></span>
+                  Generate
+                </button>
+              </div>
+            </div>
+            <div *ngIf="generated" class="mt-3">
+              <div class="alert alert-success">
+                <strong>Report #{{ generated.reportId }} Generated!</strong><br>
+                Scope: <span class="badge bg-info">{{ generated.scope }}</span>
+                Generated: {{ generated.generatedDate | date:'medium' }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metric Cards for Latest Report -->
+        <div *ngIf="generated && parsedMetrics" class="row g-3 mb-4">
+          <div class="col-sm-6 col-md-3" *ngFor="let m of metricEntries">
+            <div class="card text-center p-3 h-100">
+              <div class="text-muted small text-uppercase fw-semibold" style="font-size:0.75rem;letter-spacing:0.5px">
+                {{ formatMetricKey(m.key) }}
+              </div>
+              <div class="fw-bold mt-2" style="font-size:2.5rem;color:#0d6efd">{{ m.value }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All Reports -->
+        <div class="card">
+          <div class="card-header">All Reports</div>
+          <div class="card-body p-0">
+            <div *ngIf="loading" class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+            <table class="table table-hover mb-0" *ngIf="!loading">
+              <thead><tr><th>ID</th><th>Scope</th><th>Generated On</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let r of reports">
+                  <td>#{{ r.reportId }}</td>
+                  <td><span class="badge bg-info text-dark">{{ r.scope }}</span></td>
+                  <td>{{ r.generatedDate | date:'medium' }}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary" (click)="viewReport(r)">
+                      <i class="bi bi-eye me-1"></i>View Details
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="reports.length===0"><td colspan="4" class="text-center text-muted py-3">No reports yet</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Details Page -->
+    <div *ngIf="selectedReport">
+      <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+          <h4><i class="bi bi-file-earmark-bar-graph me-2"></i>Report #{{ selectedReport.reportId }} - {{ selectedReport.scope }}</h4>
+          <small class="text-muted">Generated: {{ selectedReport.generatedDate | date:'medium' }}</small>
+        </div>
+        <button class="btn btn-outline-secondary btn-sm" (click)="backToList()">
+          <i class="bi bi-arrow-left me-1"></i>Back to Reports
+        </button>
+      </div>
+
+      <div class="p-4">
+        <!-- Report Summary Card -->
+        <div class="card mb-4">
+          <div class="card-header fw-semibold">
+            <i class="bi bi-info-circle me-2"></i>Report Summary
+          </div>
+          <div class="card-body">
+            <div class="row g-4">
+              <div class="col-md-3">
+                <small class="text-muted d-block mb-2">Report ID</small>
+                <div class="fw-bold fs-5">#{{ selectedReport.reportId }}</div>
+              </div>
+              <div class="col-md-3">
+                <small class="text-muted d-block mb-2">Scope</small>
+                <span class="badge bg-info text-dark px-3 py-2" style="font-size:0.9rem">{{ selectedReport.scope }}</span>
+              </div>
+              <div class="col-md-3">
+                <small class="text-muted d-block mb-2">Generated On</small>
+                <div class="fw-bold">{{ selectedReport.generatedDate | date:'medium' }}</div>
+              </div>
+              <div class="col-md-3">
+                <small class="text-muted d-block mb-2">Status</small>
+                <span class="badge bg-success px-3 py-2">Completed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="card mb-4">
+          <div class="card-header fw-semibold">
+            <i class="bi bi-graph-up me-2"></i>Key Metrics
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-6 col-lg-3" *ngFor="let metric of reportMetricEntries(selectedReport)">
+                <div class="p-3 border rounded" style="background:#f8f9fa">
+                  <div class="text-muted small mb-2" style="font-size:0.8rem;text-transform:uppercase;letter-spacing:0.5px">
+                    {{ formatMetricKey(metric.key) }}
+                  </div>
+                  <div class="fw-bold" style="font-size:2rem;color:#0d6efd">{{ metric.value }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Details by Scope -->
+        <div class="card mb-4" [ngSwitch]="selectedReport.scope">
+          <!-- CASE Scope Details -->
+          <ng-container *ngSwitchCase="'CASE'">
+            <div class="card-header fw-semibold">
+              <i class="bi bi-folder2-open me-2"></i>Case Analysis
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="bg-light p-3 rounded">
+                    <h6 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Case Distribution</h6>
+                    <ul class="list-unstyled">
+                      <li class="mb-2"><strong>Total Cases:</strong> {{ getMetricValue('total_cases') }}</li>
+                      <li class="mb-2"><strong>Active:</strong> <span class="badge bg-success">{{ getMetricValue('active_cases') }}</span></li>
+                      <li class="mb-2"><strong>Closed:</strong> <span class="badge bg-dark">{{ getMetricValue('closed_cases') }}</span></li>
+                      <li class="mb-2"><strong>Under Review:</strong> <span class="badge bg-warning text-dark">{{ getMetricValue('under_review') }}</span></li>
+                      <li class="mb-2"><strong>Pending Judgment:</strong> <span class="badge bg-danger">{{ getMetricValue('pending_judgment') }}</span></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="bg-light p-3 rounded">
+                    <h6 class="mb-3"><i class="bi bi-hourglass-split me-2"></i>Duration Analysis</h6>
+                    <div class="mb-3">
+                      <small class="text-muted">Average Duration (Days)</small>
+                      <div class="fw-bold fs-5" style="color:#0d6efd">{{ getMetricValue('avg_duration_days') }} days</div>
+                    </div>
+                    <small class="text-muted">This metric represents the average time taken from case filing to latest status.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- HEARING Scope Details -->
+          <ng-container *ngSwitchCase="'HEARING'">
+            <div class="card-header fw-semibold">
+              <i class="bi bi-calendar-event me-2"></i>Hearing Analysis
+            </div>
+            <div class="card-body">
+              <div class="bg-light p-3 rounded">
+                <h6 class="mb-3">Hearing Status Breakdown</h6>
+                <div class="row g-2">
+                  <div class="col-md-3">
+                    <small class="text-muted">Total Hearings</small>
+                    <div class="fw-bold fs-5">{{ getMetricValue('total_hearings') }}</div>
+                  </div>
+                  <div class="col-md-3">
+                    <small class="text-muted">Scheduled</small>
+                    <span class="badge bg-primary py-2">{{ getMetricValue('scheduled') }}</span>
+                  </div>
+                  <div class="col-md-3">
+                    <small class="text-muted">Completed</small>
+                    <span class="badge bg-success py-2">{{ getMetricValue('completed') }}</span>
+                  </div>
+                  <div class="col-md-3">
+                    <small class="text-muted">Adjourned</small>
+                    <span class="badge bg-warning text-dark py-2">{{ getMetricValue('adjourned') }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- JUDGMENT Scope Details -->
+          <ng-container *ngSwitchCase="'JUDGMENT'">
+            <div class="card-header fw-semibold">
+              <i class="bi bi-hammer me-2"></i>Judgment Analysis
+            </div>
+            <div class="card-body">
+              <div class="bg-light p-3 rounded">
+                <h6 class="mb-3">Judgment Status Overview</h6>
+                <div class="row g-2">
+                  <div class="col-md-3">
+                    <small class="text-muted">Total Judgments</small>
+                    <div class="fw-bold fs-5">{{ getMetricValue('total_judgments') }}</div>
+                  </div>
+                  <div class="col-md-3">
+                    <small class="text-muted">Finalized</small>
+                    <span class="badge bg-success py-2">{{ getMetricValue('finalized') }}</span>
+                  </div>
+                  <div class="col-md-3">
+                    <small class="text-muted">Draft</small>
+                    <span class="badge bg-secondary py-2">{{ getMetricValue('draft') }}</span>
+                  </div>
+                  <div class="col-md-3">
+                    <small class="text-muted">Pending</small>
+                    <span class="badge bg-warning text-dark py-2">{{ getMetricValue('pending') }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- COMPLIANCE Scope Details -->
+          <ng-container *ngSwitchCase="'COMPLIANCE'">
+            <div class="card-header fw-semibold">
+              <i class="bi bi-shield-check me-2"></i>Compliance Status
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="bg-light p-3 rounded">
+                    <h6 class="mb-3">Compliance Rate</h6>
+                    <div class="fw-bold fs-4" [style.color]="getMetricValue('compliance_rate') >= 80 ? '#28a745' : '#ffc107'">
+                      {{ getMetricValue('compliance_rate') }}%
+                    </div>
+                    <small class="text-muted">Overall compliance percentage</small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="bg-light p-3 rounded">
+                    <h6 class="mb-3">Record Breakdown</h6>
+                    <ul class="list-unstyled small">
+                      <li class="mb-2"><strong>Total Records :</strong> {{ getMetricValue('total_records') }}</li>
+                      <li class="mb-2"><strong>Compliant :</strong> <span style="margin: 0 0.25rem;" class="badge bg-success">{{ getMetricValue('compliant') }}</span></li>
+                      <li class="mb-2"><strong>Non-Compliant :</strong> <span style="margin: 0 0.25rem;" class="badge bg-danger">{{ getMetricValue('non_compliant') }}</span></li>
+                      <li class="mb-2"><strong>Pending Review :</strong> <span style="margin: 0 0.25rem;" class="badge bg-warning text-dark">{{ getMetricValue('pending_review') }}</span></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- Additional Notes -->
+        <div class="card">
+          <div class="card-header fw-semibold">
+            <i class="bi bi-pencil-square me-2"></i>Report Notes
+          </div>
+          <div class="card-body">
+            <p class="text-muted mb-0">
+              This report was generated automatically on {{ selectedReport.generatedDate | date:'full' }}.
+              All metrics are calculated based on the current data in the system at the time of generation.
+              For detailed analysis or to drill down into specific records, please navigate to the relevant module.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>

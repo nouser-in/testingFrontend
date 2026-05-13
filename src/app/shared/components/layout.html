@@ -1,0 +1,209 @@
+    <div class="d-flex">
+      <!-- Sidebar -->
+      <nav class="sidebar d-flex flex-column">
+        <a routerLink="/dashboard" class="brand text-decoration-none">
+          <img src="assets/logo1.png" alt="JusticeServe Logo" class="brand-logo">
+          <div class="brand-text-wrapper">
+            <i class="bi bi-balance-scale brand-icon"></i>
+            <span class="brand-title">JusticeServe</span>
+          </div>
+        </a>
+        <div class="mt-2 flex-grow-1 overflow-auto">
+
+          <div class="nav-section">Main</div>
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-grid"></i> Dashboard
+          </a>
+
+          <!-- CITIZEN: only My Profile + My Cases + Notifications -->
+          <ng-container *ngIf="isCitizen">
+            <div class="nav-section">My Account</div>
+            <a routerLink="/citizens/my-profile" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-person-circle"></i> My Profile
+            </a>
+            <a routerLink="/cases" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-folder2-open"></i> My Cases
+            </a>
+            <a routerLink="/hearings" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-calendar-event"></i> My Hearings
+            </a>
+            <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bell"></i> Notifications
+              <span *ngIf="unreadCount > 0" class="badge bg-danger ms-auto">{{ unreadCount }}</span>
+            </a>
+          </ng-container>
+
+          <!-- LAWYER -->
+          <ng-container *ngIf="isLawyer">
+            <div class="nav-section">Case Management</div>
+            <a routerLink="/cases" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-folder2-open"></i> Cases
+            </a>
+            <a routerLink="/hearings" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-calendar-event"></i> Hearings
+            </a>
+            <a routerLink="/citizens" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-people"></i> Citizens
+            </a>
+            <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bell"></i> Notifications
+              <span *ngIf="unreadCount > 0" class="badge bg-danger ms-auto">{{ unreadCount }}</span>
+            </a>
+          </ng-container>
+
+          <!-- JUDGE -->
+          <ng-container *ngIf="isJudge">
+            <div class="nav-section">Court Work</div>
+            <a routerLink="/cases" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-folder2-open"></i> Cases
+            </a>
+            <a routerLink="/hearings" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-calendar-event"></i> Hearings
+            </a>
+            <a routerLink="/judgments" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-hammer"></i> Judgments
+            </a>
+            <a routerLink="/judgments/orders" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-file-text"></i> Court Orders
+            </a>
+            <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bell"></i> Notifications
+              <span *ngIf="unreadCount > 0" class="badge bg-danger ms-auto">{{ unreadCount }}</span>
+            </a>
+          </ng-container>
+
+          <!-- CLERK -->
+          <ng-container *ngIf="isClerk">
+            <div class="nav-section">Case Management</div>
+            <a routerLink="/citizens" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-people"></i> Citizens
+            </a>
+            <a routerLink="/cases" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-folder2-open"></i> Cases
+            </a>
+            <a routerLink="/hearings" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-calendar-event"></i> Hearings
+            </a>
+            <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bell"></i> Notifications
+              <span *ngIf="unreadCount > 0" class="badge bg-danger ms-auto">{{ unreadCount }}</span>
+            </a>
+          </ng-container>
+
+          <!-- COMPLIANCE OFFICER -->
+          <ng-container *ngIf="isCompliance">
+            <div class="nav-section">Compliance</div>
+            <a routerLink="/compliance" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-shield-check"></i> Compliance & Audits
+            </a>
+            <a routerLink="/reports" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bar-chart"></i> Reports
+            </a>
+            <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bell"></i> Notifications
+              <span *ngIf="unreadCount > 0" class="badge bg-danger ms-auto">{{ unreadCount }}</span>
+            </a>
+          </ng-container>
+
+          <!-- AUDITOR -->
+          <ng-container *ngIf="isAuditor">
+            <div class="nav-section">Audit</div>
+            <a routerLink="/compliance" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-shield-check"></i> Compliance & Audits
+            </a>
+            <a routerLink="/reports" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bar-chart"></i> Reports
+            </a>
+            <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bell"></i> Notifications
+              <span *ngIf="unreadCount > 0" class="badge bg-danger ms-auto">{{ unreadCount }}</span>
+            </a>
+          </ng-container>
+
+          <!-- ADMIN: sees everything -->
+          <ng-container *ngIf="isAdmin">
+            <div class="nav-section">Case Management</div>
+            <a routerLink="/citizens" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-people"></i> Citizens
+            </a>
+            <a routerLink="/cases" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-folder2-open"></i> Cases
+            </a>
+            <a routerLink="/hearings" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-calendar-event"></i> Hearings
+            </a>
+            <a routerLink="/judgments" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-hammer"></i> Judgments & Orders
+            </a>
+            <div class="nav-section">Compliance</div>
+            <a routerLink="/compliance" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-shield-check"></i> Compliance & Audits
+            </a>
+            <a routerLink="/reports" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bar-chart"></i> Reports
+            </a>
+            <div class="nav-section">Admin</div>
+            <a routerLink="/users" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-person-gear"></i> User Management
+            </a>
+            <a routerLink="/audit-logs" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-file-text"></i> System Logs
+            </a>
+            <!-- <a routerLink="/notifications" routerLinkActive="active" class="nav-link">
+              <i class="bi bi-bell"></i> Notifications
+              <span *ngIf="unreadCount > 0" class="badge bg-danger ms-auto">{{ unreadCount }}</span>
+            </a> -->
+          </ng-container>
+
+        </div>
+
+        <!-- User info at bottom -->
+        <div class="p-3 border-top border-secondary">
+          <div class="d-flex align-items-center gap-2">
+            <div class="rounded-circle bg-warning d-flex align-items-center justify-content-center"
+                 style="width:36px;height:36px;font-weight:700;color:#333">
+              {{ initials }}
+            </div>
+            <div class="flex-grow-1 overflow-hidden">
+              <div class="text-white text-truncate" style="font-size:0.85rem;font-weight:600">{{ userName }}</div>
+              <div class="text-white-50" style="font-size:0.75rem">{{ userRole }}</div>
+            </div>
+            <button class="btn btn-sm text-white-50" (click)="logout()" title="Logout">
+              <i class="bi bi-box-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <div class="main-content flex-grow-1">
+        <!-- Topbar -->
+        <div class="topbar d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center bg-light px-3 py-1 rounded-pill border shadow-sm" style="font-size:0.82rem">
+            <i class="bi bi-calendar3 me-2 text-primary"></i>
+            <span class="text-secondary fw-medium">{{ currentTime | date:'EEEE, MMM d, y' }}</span>
+            <span class="mx-2 text-muted opacity-50">•</span>
+            <i class="bi bi-clock me-2 text-primary"></i>
+            <span class="text-dark fw-bold">{{ currentTime | date:'h:mm a' }}</span>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <a routerLink="/notifications" class="position-relative text-decoration-none text-dark">
+              <i class="bi bi-bell fs-5"></i>
+              <span *ngIf="unreadCount > 0"
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    style="font-size:0.65rem">{{ unreadCount }}</span>
+            </a>
+            <span class="badge bg-primary">{{ userRole }}</span>
+            <strong style="font-size:0.9rem">{{ userName }}</strong>
+            <div class="border-start ps-3 ms-1">
+              <button class="btn btn-sm btn-outline-danger py-1 d-flex align-items-center gap-1" (click)="logout()">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Page Content -->
+        <router-outlet />
+      </div>
+    </div>

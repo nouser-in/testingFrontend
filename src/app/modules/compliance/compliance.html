@@ -1,0 +1,119 @@
+ <div class="page-header">
+      <h4><i class="bi bi-shield-check me-2"></i>Compliance & Audits</h4>
+    </div>
+
+    <!-- Toast Notification -->
+    <div *ngIf="toast" class="alert d-flex align-items-center gap-2 m-3 alert-dismissible fade show"
+         [ngClass]="toast.type === 'success' ? 'alert-success' : 'alert-danger'">
+      <i class="bi" [ngClass]="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'"></i>
+      {{ toast.msg }}
+      <button type="button" class="btn-close" (click)="toast = null"></button>
+    </div>
+
+    <div class="p-4">
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link" [class.active]="tab==='compliance'" (click)="tab='compliance'">Compliance Records</a></li>
+        <li class="nav-item"><a class="nav-link" [class.active]="tab==='audits'" (click)="tab='audits'">Audits</a></li>
+      </ul>
+
+      <!-- Compliance Records -->
+      <div *ngIf="tab==='compliance'">
+        <div class="card mb-3">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Compliance Records</span>
+            <button class="btn btn-sm btn-primary" (click)="showRecordForm=!showRecordForm">+ New Record</button>
+          </div>
+          <div *ngIf="showRecordForm" class="card-body border-bottom bg-light">
+            <div class="row g-2">
+              <div class="col-md-2">
+                <input type="number" class="form-control form-control-sm" [(ngModel)]="recForm.entityId" placeholder="Entity ID">
+              </div>
+              <div class="col-md-3">
+                <select class="form-select form-select-sm" [(ngModel)]="recForm.type">
+                  <option value="">Type...</option>
+                  <option>CASE</option><option>HEARING</option><option>JUDGMENT</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <select class="form-select form-select-sm" [(ngModel)]="recForm.result">
+                  <option value="">Result...</option>
+                  <option>COMPLIANT</option><option>NON_COMPLIANT</option><option>PENDING</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <input class="form-control form-control-sm" [(ngModel)]="recForm.notes" placeholder="Notes">
+              </div>
+              <div class="col-md-1">
+                <button class="btn btn-sm btn-success w-100" (click)="addRecord()">Add</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div *ngIf="loading" class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+            <table class="table table-hover mb-0" *ngIf="!loading">
+              <thead><tr><th>ID</th><th>Entity ID</th><th>Type</th><th>Result</th><th>Date</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let r of records">
+                  <td>#{{ r.complianceId }}</td>
+                  <td>{{ r.entityId }}</td>
+                  <td><span class="badge bg-secondary">{{ r.type }}</span></td>
+                  <td><span class="badge" [ngClass]="resultBadge(r.result)">{{ r.result }}</span></td>
+                  <td>{{ r.date | date:'mediumDate' }}</td>
+                  <td>{{ r.notes || '—' }}</td>
+                </tr>
+                <tr *ngIf="records.length===0"><td colspan="6" class="text-center text-muted py-3">No records</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audits -->
+      <div *ngIf="tab==='audits'">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Audit Records</span>
+            <button class="btn btn-sm btn-primary" (click)="showAuditForm=!showAuditForm">+ New Audit</button>
+          </div>
+          <div *ngIf="showAuditForm" class="card-body border-bottom bg-light">
+            <div class="row g-2">
+              <div class="col-md-3">
+                <select class="form-select form-select-sm" [(ngModel)]="auditForm.officerId">
+                  <option [value]="0">Officer...</option>
+                  <option *ngFor="let u of officers" [value]="u.userId">{{ u.name }}</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <input class="form-control form-control-sm" [(ngModel)]="auditForm.scope" placeholder="Scope of audit">
+              </div>
+              <div class="col-md-4">
+                <input class="form-control form-control-sm" [(ngModel)]="auditForm.findings" placeholder="Initial findings">
+              </div>
+              <div class="col-md-1">
+                <button class="btn btn-sm btn-success w-100" (click)="addAudit()">Add</button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div *ngIf="auditsLoading" class="text-center py-4"><div class="spinner-border text-primary"></div></div>
+            <table class="table table-hover mb-0" *ngIf="!auditsLoading">
+              <thead><tr><th>ID</th><th>Officer</th><th>Scope</th><th>Findings</th><th>Date</th><th>Status</th><th>Update</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let a of audits">
+                  <td>#{{ a.auditId }}</td>
+                  <td>{{ a.officerName }}</td>
+                  <td>{{ a.scope }}</td>
+                  <td>{{ (a.findings || '—') | slice:0:40 }}</td>
+                  <td>{{ a.date | date:'mediumDate' }}</td>
+                  <td><span class="badge" [ngClass]="auditBadge(a.status)">{{ a.status }}</span></td>
+                  <td>
+                    <span class="badge" [ngClass]="auditBadge(a.status)">{{ a.status }}</span>
+                  </td>
+                </tr>
+                <tr *ngIf="audits.length===0"><td colspan="7" class="text-center text-muted py-3">No audits</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>

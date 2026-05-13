@@ -1,0 +1,136 @@
+    <div class="page-header d-flex justify-content-between align-items-center">
+      <div>
+        <h4><i class="bi bi-file-text me-2"></i>System Logs</h4>
+        <small class="text-muted">Audit trail of all system activities</small>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary btn-sm" (click)="refreshLogs()">
+          <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+        </button>
+        <button class="btn btn-outline-danger btn-sm" (click)="deleteAllLogs()">
+          <i class="bi bi-trash me-1"></i>Delete All Logs
+        </button>
+      </div>
+    </div>
+
+    <div class="p-4">
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2 text-muted">Loading audit logs...</p>
+      </div>
+
+      <div *ngIf="!loading">
+        
+        <!-- Filters -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label small fw-semibold">Filter by Action</label>
+                <select class="form-select form-select-sm" [(ngModel)]="filterAction" (change)="applyFilters()">
+                  <option value="">All Actions</option>
+                  <option *ngFor="let action of uniqueActions" [value]="action">{{ action }}</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-semibold">Filter by Resource</label>
+                <select class="form-select form-select-sm" [(ngModel)]="filterResource" (change)="applyFilters()">
+                  <option value="">All Resources</option>
+                  <option *ngFor="let resource of uniqueResources" [value]="resource">{{ resource }}</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label small fw-semibold">Filter by User ID</label>
+                <input type="number" class="form-control form-control-sm" [(ngModel)]="filterUserId" (input)="applyFilters()" placeholder="Enter user ID">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row g-3 mb-3">
+          <div class="col-sm-6 col-md-3">
+            <div class="stat-box">
+              <div class="stat-label">Total Logs</div>
+              <div class="stat-value">{{ logs.length }}</div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="stat-box">
+              <div class="stat-label">Unique Users</div>
+              <div class="stat-value">{{ getUniqueUsers() }}</div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="stat-box">
+              <div class="stat-label">Unique Actions</div>
+              <div class="stat-value">{{ uniqueActions.length }}</div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="stat-box">
+              <div class="stat-label">Unique Resources</div>
+              <div class="stat-value">{{ uniqueResources.length }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logs Table -->
+        <div class="card">
+          <div class="card-header fw-semibold"><i class="bi bi-list-ul me-2"></i>Audit Log Entries</div>
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>User ID</th>
+                  <th>Action</th>
+                  <th>Resource</th>
+                  <th>Timestamp</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let log of filtered" class="audit-log-row">
+                  <td><span class="badge bg-secondary">#{{ log.auditLogId }}</span></td>
+                  <td>
+                    <span class="badge bg-light text-dark">
+                      <i class="bi bi-person me-1"></i>{{ log.userId }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="action-badge" [ngClass]="getActionClass(log.action)">
+                      {{ log.action }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="resource-badge">
+                      <i class="bi me-1" [ngClass]="getResourceIcon(log.resource)"></i>{{ log.resource }}
+                    </span>
+                  </td>
+                  <td>
+                    <small class="text-muted">{{ log.timestamp | date:'medium' }}</small>
+                  </td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-danger" title="Delete log" (click)="deleteLog(log.auditLogId)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="filtered.length === 0">
+                  <td colspan="6" class="text-center text-muted py-4">
+                    <i class="bi bi-inbox" style="font-size:2rem;opacity:0.3"></i>
+                    <p class="mt-2 mb-0">No audit logs found</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-footer text-muted small d-flex justify-content-between align-items-center">
+            <span>Showing {{ filtered.length }} of {{ logs.length }} logs</span>
+            <span>Last updated: {{ lastUpdated | date:'medium' }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>

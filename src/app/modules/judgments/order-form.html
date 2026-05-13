@@ -1,0 +1,42 @@
+    <div class="page-header">
+      <h4><i class="bi bi-file-text me-2"></i>Issue Court Order</h4>
+    </div>
+    <div class="p-4">
+      <div class="row justify-content-center">
+        <div class="col-lg-7">
+          <div class="card">
+            <div class="card-body p-4">
+              <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+              <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+              <form (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                  <label class="form-label">Case <span class="text-danger">*</span></label>
+                  <select class="form-select" [(ngModel)]="form.caseId" name="caseId" required>
+                    <option [value]="0">Select case...</option>
+                    <option *ngFor="let c of cases" [value]="c.caseId">#{{ c.caseId }} – {{ c.title }}</option>
+                  </select>
+                </div>
+                <div class="mb-3" *ngIf="auth.role !== 'JUDGE'">
+                  <label class="form-label">Judge <span class="text-danger">*</span></label>
+                  <select class="form-select" [(ngModel)]="form.judgeId" name="judgeId" required>
+                    <option [value]="0">Select judge...</option>
+                    <option *ngFor="let j of judges" [value]="j.userId">{{ j.name }}</option>
+                  </select>
+                </div>
+                <div class="mb-4">
+                  <label class="form-label">Order Description <span class="text-danger">*</span></label>
+                  <textarea class="form-control" rows="4" [(ngModel)]="form.description" name="description" required
+                            placeholder="Describe the court order..."></textarea>
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="submit" class="btn btn-primary" [disabled]="loading">
+                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>Issue Order
+                  </button>
+                  <a routerLink="/judgments" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

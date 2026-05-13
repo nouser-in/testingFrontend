@@ -1,0 +1,7 @@
+    <div *ngIf="loading" class="loading-screen">
+      <div class="logo-container">
+        <img src="assets/logo.png" alt="JusticeServe" class="logo">
+        <h1 class="brand-text">JusticeServe</h1>
+      </div>
+    </div>
+    <router-outlet *ngIf="!loading" />

@@ -1,0 +1,197 @@
+:root {
+  --js-primary: #1a3a5c;
+  --js-secondary: #2e6da4;
+  --js-accent: #c8a84b;
+  --js-light: #f4f7fb;
+  --js-dark: #0d1f33;
+}
+
+body {
+  background-color: var(--js-light);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: var(--js-primary);
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transition: width 0.3s;
+}
+
+.sidebar .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: 0.35px;
+  text-transform: none;
+}
+
+.sidebar .brand img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+
+.sidebar .brand-text-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar .brand-icon {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.85);
+}
+
+.sidebar .brand-title {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sidebar .brand i {
+  font-size: 1.15rem;
+  opacity: 0.9;
+}
+
+.sidebar .nav-link {
+  color: rgba(255,255,255,0.8);
+  padding: 0.6rem 1.5rem;
+  border-radius: 0;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border-left: 3px solid var(--js-accent);
+}
+
+.sidebar .nav-section {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,0.4);
+  padding: 1rem 1.5rem 0.3rem;
+}
+
+.main-content {
+  margin-left: 260px;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: #fff;
+  border-bottom: 1px solid #e0e7ef;
+  padding: 0.75rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.stat-card {
+  border: none;
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: #fff;
+  transition: transform 0.2s;
+}
+
+.stat-card:hover { transform: translateY(-3px); }
+
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.card-header {
+  background: #fff;
+  border-bottom: 1px solid #f0f4f8;
+  font-weight: 600;
+  border-radius: 12px 12px 0 0 !important;
+  padding: 1rem 1.25rem;
+}
+
+.table th {
+  background: #f8fafc;
+  font-weight: 600;
+  font-size: 0.83rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.table td { vertical-align: middle; font-size: 0.9rem; }
+
+.badge { font-size: 0.75rem; font-weight: 500; padding: 0.4em 0.7em; }
+
+.form-label { font-weight: 500; font-size: 0.88rem; color: #374151; }
+.form-control, .form-select {
+  border-color: #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--js-secondary);
+  box-shadow: 0 0 0 3px rgba(46,109,164,0.12);
+}
+
+.btn { border-radius: 8px; font-size: 0.88rem; font-weight: 500; }
+.btn-primary { background: var(--js-secondary); border-color: var(--js-secondary); }
+.btn-primary:hover { background: var(--js-primary); border-color: var(--js-primary); }
+
+.page-header {
+  padding: 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+.page-header h4 { margin: 0; font-weight: 700; color: var(--js-primary); }
+
+.alert { border-radius: 10px; border: none; }
+
+.modal-header { background: var(--js-primary); color: #fff; border-radius: 12px 12px 0 0; }
+.modal-header .btn-close { filter: invert(1); }
+.modal-content { border: none; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+
+@media (max-width: 768px) {
+  .sidebar { width: 0; overflow: hidden; }
+  .main-content { margin-left: 0; }
+}
+
+.status-FILED { color: #6366f1; }
+.status-ACTIVE { color: #10b981; }
+.status-CLOSED { color: #6b7280; }
+.status-PENDING { color: #f59e0b; }
+.status-SCHEDULED { color: #3b82f6; }
+.status-FINAL { color: #10b981; }
+
+.spinner-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
